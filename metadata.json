@@ -1,0 +1,7 @@
+{
+  "name": "ExpenseFlow Admin & Webhook",
+  "description": "A comprehensive expense control assistant with WhatsApp simulation, AI-powered parsing, and an administrative dashboard.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
