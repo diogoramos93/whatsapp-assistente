@@ -1,36 +1,24 @@
 
 import { Expense, EvolutionConfig } from '../types';
-import { DB_STORAGE_KEY, CONFIG_STORAGE_KEY } from '../constants';
+import { API_BASE_URL } from '../constants';
 
 export const dbService = {
-  getExpenses: (): Expense[] => {
-    const data = localStorage.getItem(DB_STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+  getExpenses: async (): Promise<Expense[]> => {
+    const response = await fetch(`${API_BASE_URL}/expenses`);
+    return response.json();
   },
 
-  saveExpense: (expense: Omit<Expense, 'id' | 'created_at'>): Expense => {
-    const expenses = dbService.getExpenses();
-    const newExpense: Expense = {
-      ...expense,
-      id: crypto.randomUUID(),
-      created_at: new Date().toISOString()
-    };
-    expenses.push(newExpense);
-    localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(expenses));
-    return newExpense;
+  deleteExpense: async (id: string | number): Promise<void> => {
+    await fetch(`${API_BASE_URL}/expenses/${id}`, { method: 'DELETE' });
   },
 
-  deleteExpense: (id: string): void => {
-    const expenses = dbService.getExpenses().filter(e => e.id !== id);
-    localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(expenses));
-  },
-
+  // Configurações continuam no localStorage pois são locais do Admin
   getConfig: (): EvolutionConfig => {
-    const data = localStorage.getItem(CONFIG_STORAGE_KEY);
+    const data = localStorage.getItem('expense_flow_config');
     return data ? JSON.parse(data) : { baseUrl: '', token: '', instanceName: '' };
   },
 
   saveConfig: (config: EvolutionConfig): void => {
-    localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config));
+    localStorage.setItem('expense_flow_config', JSON.stringify(config));
   }
 };

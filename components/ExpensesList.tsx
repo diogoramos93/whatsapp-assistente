@@ -1,23 +1,43 @@
 
-import React, { useState } from 'react';
-// Add missing ReceiptText icon import
+import React, { useState, useEffect } from 'react';
+// Importação do ReceiptText e ícones necessários
 import { Search, Filter, Download, Trash2, Smartphone, Mic, FileText, ReceiptText } from 'lucide-react';
 import { dbService } from '../services/dbService';
 import { Expense } from '../types';
 
 const ExpensesList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [expenses, setExpenses] = useState<Expense[]>(dbService.getExpenses());
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+
+  // Função para carregar despesas de forma assíncrona
+  const loadExpenses = async () => {
+    try {
+      const data = await dbService.getExpenses();
+      setExpenses(data);
+    } catch (error) {
+      console.error("Erro ao carregar despesas:", error);
+    }
+  };
+
+  // Carrega as despesas ao montar o componente
+  useEffect(() => {
+    loadExpenses();
+  }, []);
 
   const filteredExpenses = expenses.filter(exp => 
     exp.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     exp.phone_number.includes(searchTerm)
   ).reverse();
 
-  const handleDelete = (id: string) => {
+  // Correção: handleDelete agora é assíncrono para aguardar a deleção e atualizar a lista
+  const handleDelete = async (id: string) => {
     if (confirm('Deseja realmente excluir este registro?')) {
-      dbService.deleteExpense(id);
-      setExpenses(dbService.getExpenses());
+      try {
+        await dbService.deleteExpense(id);
+        await loadExpenses();
+      } catch (error) {
+        console.error("Erro ao excluir despesa:", error);
+      }
     }
   };
 
