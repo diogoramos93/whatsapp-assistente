@@ -35,5 +35,6 @@ export enum AppRoute {
   EXPENSES = 'expenses',
   INTEGRATIONS = 'integrations',
   WEBHOOK_SIM = 'webhook-sim',
+  DOCUMENTATION = 'documentation',
   LOGIN = 'login'
 }

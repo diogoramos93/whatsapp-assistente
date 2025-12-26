@@ -11,7 +11,8 @@ import {
   CreditCard,
   History,
   TrendingUp,
-  ExternalLink
+  ExternalLink,
+  BookOpen
 } from 'lucide-react';
 import { AppRoute, Expense, DashboardStats } from './types';
 import { AUTH_STORAGE_KEY } from './constants';
@@ -19,6 +20,7 @@ import Dashboard from './components/Dashboard';
 import ExpensesList from './components/ExpensesList';
 import Integrations from './components/Integrations';
 import WebhookSimulator from './components/WebhookSimulator';
+import Documentation from './components/Documentation';
 import Login from './components/Login';
 import { dbService } from './services/dbService';
 
@@ -57,6 +59,7 @@ const App: React.FC = () => {
       case AppRoute.EXPENSES: return <ExpensesList />;
       case AppRoute.INTEGRATIONS: return <Integrations />;
       case AppRoute.WEBHOOK_SIM: return <WebhookSimulator />;
+      case AppRoute.DOCUMENTATION: return <Documentation />;
       default: return <Dashboard />;
     }
   };
@@ -66,6 +69,7 @@ const App: React.FC = () => {
     { id: AppRoute.EXPENSES, label: 'Gastos', icon: ReceiptText },
     { id: AppRoute.INTEGRATIONS, label: 'Integrações', icon: Settings },
     { id: AppRoute.WEBHOOK_SIM, label: 'Simulador Webhook', icon: Terminal },
+    { id: AppRoute.DOCUMENTATION, label: 'Documentação', icon: BookOpen },
   ];
 
   return (
